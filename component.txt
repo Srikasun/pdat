@@ -1,0 +1,106 @@
+object ImmutableCollectionsDemo {
+
+  def main(args: Array[String]): Unit = {
+
+    // Immutable List
+    val numbers: List[Int] = List(10, 5, 20, 3, 15)
+
+    // Immutable Set
+    val fruitSet: Set[String] = Set("apple", "banana", "mango", "banana")
+
+    // Immutable Map
+    val priceMap: Map[String, Int] = Map(
+      "pen" -> 10,
+      "book" -> 50,
+      "pencil" -> 5
+    )
+
+    // --- List operations ---
+    val doubled = numbers.map(_ * 2)
+    val filtered = numbers.filter(_ > 10)
+    val sum = numbers.reduce(_ + _)
+    val sorted = numbers.sorted
+
+    // --- Set operations ---
+    val upperFruits = fruitSet.map(_.toUpperCase)
+    val fruitsStartingWithB = fruitSet.filter(_.startsWith("b"))
+
+    // --- Map operations ---
+    val increasedPrices = priceMap.map { case (item, price) => (item, price + 5) }
+    val itemsAbove10 = priceMap.filter { case (_, price) => price > 10 }
+    val totalCost = priceMap.values.fold(0)(_ + _)
+
+    // --- Display results ---
+    println("Original List: " + numbers)
+    println("List doubled: " + doubled)
+    println("List filtered (>10): " + filtered)
+    println("List sum (reduce): " + sum)
+    println("List sorted: " + sorted)
+
+    println("\nOriginal Set: " + fruitSet)
+    println("Set uppercased: " + upperFruits)
+    println("Set starting with 'b': " + fruitsStartingWithB)
+
+    println("\nOriginal Map: " + priceMap)
+    println("Map with increased prices: " + increasedPrices)
+    println("Map filtered (price > 10): " + itemsAbove10)
+    println("Total price using fold: " + totalCost)
+  }
+}
+scalac ImmutableCollectionsDemo.scala
+scala ImmutableCollectionsDemo
+mkdir scala_project
+cd scala_project
+nano ImmutableCollectionsDemo.scala
+// Abstract class
+abstract class Shape {
+  def area(): Double   // abstract method
+}
+
+// Trait to display information
+trait DisplayInfo {
+  def display(): Unit
+}
+
+// Circle subclass
+class Circle(val radius: Double) extends Shape with DisplayInfo {
+  override def area(): Double = math.Pi * radius * radius
+
+  override def display(): Unit = {
+    println(s"Shape: Circle")
+    println(s"Radius: $radius")
+    println(f"Area: ${area()}%.2f")
+    println("------------------------")
+  }
+}
+
+// Rectangle subclass
+class Rectangle(val length: Double, val width: Double) 
+  extends Shape with DisplayInfo {
+
+  override def area(): Double = length * width
+
+  override def display(): Unit = {
+    println(s"Shape: Rectangle")
+    println(s"Length: $length, Width: $width")
+    println(f"Area: ${area()}%.2f")
+    println("------------------------")
+  }
+}
+
+// Main object to run the program
+object ShapeDemo {
+  def main(args: Array[String]): Unit = {
+
+    val circle = new Circle(5.0)
+    val rectangle = new Rectangle(4.0, 6.0)
+
+    circle.display()
+    rectangle.display()
+  }
+}
+mkdir scala_shapes
+cd scala_shapes
+nano ShapeDemo.scala
+scalac ShapeDemo.scala
+scala ShapeDemo
