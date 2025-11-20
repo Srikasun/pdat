@@ -1,0 +1,29 @@
+from pyspark.sql import SparkSession
+from pyspark.ml.feature import VectorAssembler, StringIndexer
+from pyspark.ml.classification import LogisticRegression
+from pyspark.ml.evaluation import MulticlassClassificationEvaluator
+
+spark = SparkSession.builder.appName("MLlib Classification Example").getOrCreate()
+
+data = spark.read.csv("customer_churn.csv", header=True, inferSchema=True)
+
+indexer = StringIndexer(inputCol="Churn", outputCol="label")
+data = indexer.fit(data).transform(data)
+
+feature_cols = ["age", "salary", "tenure", "num_products"]
+assembler = VectorAssembler(inputCols=feature_cols, outputCol="features")
+data = assembler.transform(data)
+
+train_data, test_data = data.randomSplit([0.7, 0.3], seed=42)
+
+lr = LogisticRegression(featuresCol="features", labelCol="label")
+model = lr.fit(train_data)
+
+predictions = model.transform(test_data)
+predictions.select("features", "label", "prediction").show(10)
+
+evaluator = MulticlassClassificationEvaluator(labelCol="label", predictionCol="prediction", metricName="accuracy")
+accuracy = evaluator.evaluate(predictions)
+print("Model Accuracy:", accuracy)
+
+spark.stop()
